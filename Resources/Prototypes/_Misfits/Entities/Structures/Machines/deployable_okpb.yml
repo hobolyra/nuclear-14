@@ -1,0 +1,111 @@
+# Deployable Organic Kinetic Photon Barrier — half-wall + vaultable when retracted, full-tile reflective shield when deployed.
+- type: entity
+  parent: BaseMachine
+  id: DeployableOKPB
+  name: Deployable-OKPB
+  description: an Organic Kinetic Photon Barrier projector
+  components:
+  - type: Transform
+    noRot: false
+    anchored: false
+  - type: Physics
+    bodyType: Dynamic
+  - type: Sprite
+    noRot: false
+    sprite: _Misfits/Objects/Misc/okpb.rsi
+    layers:
+    - state: retracted
+      map: [ "enum.ToggleVisuals.Layer" ]
+  - type: Icon
+    sprite: _Misfits/Objects/Misc/okpb.rsi
+    state: retracted
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ToggleVisuals.Toggled:
+        enum.ToggleVisuals.Layer:
+          True: { state: deployed }
+          False: { state: retracted }
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 190
+        mask:
+        - HalfWallLayer
+        layer:
+        - HalfWallLayer
+        - BulletImpassable
+  - type: Climbable
+  - type: DeployableOkpb
+    fixtureId: fix1
+    cellRemovalDelay: 2
+  - type: ItemToggle
+    onUse: false
+    onActivate: true
+    predictable: false
+    soundActivate:
+      path: /Audio/_Misfits/Effects/okpb_deploy.ogg
+  - type: ComponentToggler
+    components:
+    - type: Reflect
+      reflectProb: 0.4
+      innate: true
+      spread: 45
+      reflects:
+      - NonEnergy
+      - Energy
+      - SmallCaliber
+      - MediumCaliber
+    - type: PowerCellDamageAbsorption
+      absorption: 0.6
+  - type: PointLight
+    enabled: false
+    radius: 2
+    energy: 1.5
+    color: "#80FFFF"
+    netsync: false
+  - type: ItemTogglePointLight
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+    fitsInCharger: false
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        ejectOnInteract: false
+        disableEject: true
+        whitelist:
+          components:
+          - PowerCell
+  - type: DoAfter
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:EmptyAllContainersBehaviour
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Anchorable
+    delay: 2
+  - type: InteractionOutline
+  - type: Clickable
