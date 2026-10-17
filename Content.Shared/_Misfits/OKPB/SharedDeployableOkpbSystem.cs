@@ -2,6 +2,7 @@ using Content.Shared.Climbing.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
+using Content.Shared.Physics;
 using Content.Shared.Popups;
 using Content.Shared.PowerCell;
 using Content.Shared.PowerCell.Components;
@@ -10,13 +11,18 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 
-namespace Content.Shared._Misfits.DeployableOkpb;
+namespace Content.Shared._Misfits.OKPB;
 
 /// <summary>
-/// Handles deploy/retract collision, climbability, and activate-attempt gates for Deployable-OKPB.
+/// Handles collision changes, vaulting, and activation of the Deployable-OKPB.
 /// </summary>
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 {
+    private const CollisionGroup RetractedLayer = CollisionGroup.HalfWallLayer | CollisionGroup.BulletImpassable;
+    private const CollisionGroup RetractedMask = CollisionGroup.HalfWallLayer;
+    private const CollisionGroup DeployedLayer = CollisionGroup.FullTileLayer;
+    private const CollisionGroup DeployedMask = CollisionGroup.FullTileMask;
+
     [Dependency] private FixtureSystem _fixtures = default!;
     [Dependency] private ItemSlotsSystem _slots = default!;
     [Dependency] private ItemToggleSystem _toggle = default!;
@@ -64,9 +70,6 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
             _toggle.TryDeactivate(ent.Owner);
     }
 
-    /// <summary>
-    /// Unanchored OKPBs are Dynamic so they can be pulled; anchored ones stay Static.
-    /// </summary>
     private void UpdatePullPhysics(EntityUid uid)
     {
         if (!TryComp(uid, out PhysicsComponent? physics))
@@ -164,18 +167,10 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
         var fixture = _fixtures.GetFixtureOrNull(uid, comp.FixtureId);
         if (fixture != null)
         {
-            if (deployed)
-            {
-                _physics.SetCollisionLayer(uid, comp.FixtureId, fixture, (int)comp.DeployedLayer);
-                _physics.SetCollisionMask(uid, comp.FixtureId, fixture, (int)comp.DeployedMask);
-                _physics.SetHard(uid, fixture, true);
-            }
-            else
-            {
-                _physics.SetCollisionLayer(uid, comp.FixtureId, fixture, (int)comp.RetractedLayer);
-                _physics.SetCollisionMask(uid, comp.FixtureId, fixture, (int)comp.RetractedMask);
-                _physics.SetHard(uid, fixture, true);
-            }
+            var layer = deployed ? DeployedLayer : RetractedLayer;
+            var mask = deployed ? DeployedMask : RetractedMask;
+            _physics.SetCollisionLayer(uid, comp.FixtureId, fixture, (int)layer);
+            _physics.SetCollisionMask(uid, comp.FixtureId, fixture, (int)mask);
         }
 
         if (deployed)
@@ -183,7 +178,6 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
         else
             EnsureComp<ClimbableComponent>(uid);
 
-        _appearance.SetData(uid, DeployableOkpbVisuals.Deployed, deployed);
         _appearance.SetData(uid, ToggleVisuals.Toggled, deployed);
 
         // Lock cell while deployed so it cannot be swapped mid-barrier.

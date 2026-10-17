@@ -1,4 +1,3 @@
-# Deployable Organic Kinetic Photon Barrier — half-wall + vaultable when retracted, full-tile reflective shield when deployed.
 - type: entity
   parent: BaseMachine
   id: DeployableOKPB
@@ -40,8 +39,6 @@
         - BulletImpassable
   - type: Climbable
   - type: DeployableOkpb
-    fixtureId: fix1
-    cellRemovalDelay: 2
   - type: ItemToggle
     onUse: false
     onActivate: true
@@ -59,7 +56,7 @@
       - Energy
       - SmallCaliber
       - MediumCaliber
-    - type: PowerCellDamageAbsorption
+    - type: PowerDamAbsorption
       absorption: 0.6
   - type: PointLight
     enabled: false

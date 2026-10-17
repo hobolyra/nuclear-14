@@ -1,17 +1,17 @@
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.PowerCell;
-using Content.Shared._Misfits.PowerCell;
+using Content.Shared._Misfits.OKPB;
 using Content.Shared.Armor;
 using Content.Shared.Damage;
 using Content.Shared.PowerCell;
 
-namespace Content.Server._Misfits.PowerCell;
+namespace Content.Server._Misfits.OKPB;
 
 /// <summary>
-/// Drains slotted power cell charge in place of entity health when <see cref="PowerCellDamageAbsorptionComponent"/> is present.
+/// Uses power cell charge to absorb damage instead of entity health
 /// </summary>
-public sealed partial class PowerCellDamageAbsorptionSystem : EntitySystem
+public sealed partial class PowerDamAbsorptionSystem : EntitySystem
 {
     [Dependency] private BatterySystem _battery = default!;
     [Dependency] private PowerCellSystem _powerCell = default!;
@@ -20,19 +20,18 @@ public sealed partial class PowerCellDamageAbsorptionSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<PowerCellDamageAbsorptionComponent, DamageModifyEvent>(OnDamageModify,
+        SubscribeLocalEvent<PowerDamAbsorptionComponent, DamageModifyEvent>(OnDamageModify,
             after: [typeof(SharedArmorSystem)]);
     }
 
-    private void OnDamageModify(Entity<PowerCellDamageAbsorptionComponent> ent, ref DamageModifyEvent args)
+    private void OnDamageModify(Entity<PowerDamAbsorptionComponent> ent, ref DamageModifyEvent args)
     {
         TryAbsorbDamage((ent.Owner, ent.Comp), ref args);
     }
 
-    /// <summary>
-    /// Public API: attempt to absorb the damage into the slotted cell.
-    /// </summary>
-    public bool TryAbsorbDamage(Entity<PowerCellDamageAbsorptionComponent?> ent, ref DamageModifyEvent args)
+
+    /// Try to pull charge from cell to absorb damage
+    public bool TryAbsorbDamage(Entity<PowerDamAbsorptionComponent?> ent, ref DamageModifyEvent args)
     {
         if (!Resolve(ent, ref ent.Comp, false))
             return false;
@@ -44,20 +43,16 @@ public sealed partial class PowerCellDamageAbsorptionSystem : EntitySystem
         if (total <= 0)
             return false;
 
-        var absorption = Math.Clamp(ent.Comp.Absorption, 0f, float.MaxValue);
+        var absorption = ent.Comp.Absorption;
         if (absorption <= 0f)
             return false;
 
         var desiredDrain = (float)total * absorption;
-        var chargeBefore = battery.CurrentCharge;
-        if (chargeBefore <= 0)
-            return false;
-
-        var used = Math.Min(desiredDrain, chargeBefore);
+        var used = Math.Min(desiredDrain, battery.CurrentCharge);
         _battery.UseCharge(batteryUid, used, battery);
 
-        // Full absorption of the hit when enough charge was available for the desired drain.
-        var remainingFraction = desiredDrain > 0f ? 1f - (used / desiredDrain) : 1f;
+        // account for insufficient charge
+        var remainingFraction = 1f - (used / desiredDrain);
         if (remainingFraction <= 0f)
             args.Damage *= 0f;
         else if (remainingFraction < 1f)
@@ -72,11 +67,9 @@ public sealed partial class PowerCellDamageAbsorptionSystem : EntitySystem
         return used > 0;
     }
 
-    /// <summary>
-    /// Pure check: can this entity absorb damage into a slotted cell with remaining charge?
-    /// </summary>
+    /// Can damage be absorbed from the cell?
     public bool CanAbsorb(
-        Entity<PowerCellDamageAbsorptionComponent?> ent,
+        Entity<PowerDamAbsorptionComponent?> ent,
         out EntityUid batteryUid,
         out BatteryComponent battery)
     {

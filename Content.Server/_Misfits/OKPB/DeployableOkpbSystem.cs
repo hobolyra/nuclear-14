@@ -1,5 +1,5 @@
 using Content.Server.PowerCell;
-using Content.Shared._Misfits.DeployableOkpb;
+using Content.Shared._Misfits.OKPB;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DoAfter;
 using Content.Shared.Interaction;
@@ -9,10 +9,10 @@ using Content.Shared.Verbs;
 using Robust.Shared.Containers;
 using Robust.Shared.Utility;
 
-namespace Content.Server._Misfits.DeployableOkpb;
+namespace Content.Server._Misfits.OKPB;
 
 /// <summary>
-/// Server Deployable-OKPB: charge gate, empty-cell shutdown, and 2s DoAfter cell removal.
+/// Deployable OKPB - cell checks, and removal actions
 /// </summary>
 public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
 {
@@ -40,9 +40,8 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
             args.Handled = true;
     }
 
-    /// <summary>
-    /// Blocks instant cell swaps; players must use the DoAfter remove verb first.
-    /// </summary>
+
+    /// Cells need to be removed (DoAfter) before swapping to prevent cheese
     public bool TryBlockCellSwap(Entity<DeployableOkpbComponent?> ent, EntityUid used, EntityUid user)
     {
         if (!CanBlockCellSwap(ent, used))
@@ -106,9 +105,8 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         });
     }
 
-    /// <summary>
-    /// Pure check: can the user begin removing the power cell?
-    /// </summary>
+
+    /// Can has remove cell??????
     public bool CanRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user, bool quiet = false)
     {
         if (!Resolve(ent, ref ent.Comp, false))
@@ -131,9 +129,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         return true;
     }
 
-    /// <summary>
-    /// Starts the DoAfter to eject the slotted power cell.
-    /// </summary>
+    /// Ejection DoAfter
     public bool TryStartRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -163,9 +159,8 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
             args.Handled = true;
     }
 
-    /// <summary>
-    /// Ejects the slotted power cell into the user's hands after a successful DoAfter.
-    /// </summary>
+
+    /// Grabby Grabby - puts cell into hands after
     public bool TryRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -177,7 +172,6 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         if (!TryGetCellSlotId(ent.Owner, out var slotId) || !_slots.TryGetSlot(ent.Owner, slotId, out var slot))
             return false;
 
-        // Keep the flag set for both CanRemove (CanEject) and the real Remove (Eject).
         ent.Comp.AllowNextCellEject = true;
         var ejected = _slots.TryEjectToHands(ent.Owner, slot, user);
         ent.Comp.AllowNextCellEject = false;
@@ -185,9 +179,8 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         return ejected && _slots.GetItemOrNull(ent.Owner, slotId) == null;
     }
 
-    /// <summary>
-    /// Blocks cell removal unless authorized by <see cref="TryRemoveCell"/> (or the entity is being deleted).
-    /// </summary>
+
+
     private void OnCellRemovingAttempt(Entity<DeployableOkpbComponent> ent, ref ContainerIsRemovingAttemptEvent args)
     {
         if (TerminatingOrDeleted(ent.Owner))
