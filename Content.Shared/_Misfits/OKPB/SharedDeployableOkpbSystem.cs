@@ -12,7 +12,7 @@ using Robust.Shared.Physics.Systems;
 namespace Content.Shared._Misfits.OKPB;
 
 /// <summary>
-/// Handles collision changes, vaulting, and activation of the Deployable-OKPB.
+/// Handles collision changes, vaulting, and activation of the Deployable-OKPB
 /// </summary>
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 {
@@ -114,7 +114,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     }
 
 
-    /// Checks that a power cell is slotted. The server override checks for charge
+    /// Checks that a power cell is slotted. server side checks for charge
     protected virtual bool HasDeployCharge(Entity<DeployableOkpbComponent?> ent, EntityUid? user, bool quiet)
     {
         if (!TryComp<PowerCellSlotComponent>(ent.Owner, out var slot)

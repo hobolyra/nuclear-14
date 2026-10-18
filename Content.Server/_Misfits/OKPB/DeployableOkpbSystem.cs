@@ -16,6 +16,7 @@ namespace Content.Server._Misfits.OKPB;
 /// </summary>
 public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
 {
+
     [Dependency] private ItemSlotsSystem _slots = default!;
     [Dependency] private ItemToggleSystem _toggle = default!;
     [Dependency] private PowerCellSystem _powerCell = default!;
@@ -26,9 +27,89 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         base.Initialize();
 
         SubscribeLocalEvent<DeployableOkpbComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
-        SubscribeLocalEvent<DeployableOkpbComponent, RemoveDeployableOkpbCellEvent>(OnRemoveCellDoAfter);
+        SubscribeLocalEvent<DeployableOkpbComponent, GetVerbsEvent<ActivationVerb>>(OnGetActivationVerbs,
+            after: [typeof(ItemToggleSystem)]);
+        SubscribeLocalEvent<DeployableOkpbComponent, ActivateInWorldEvent>(OnActivateInWorld,
+            before: [typeof(ItemToggleSystem)]);
+        SubscribeLocalEvent<DeployableOkpbComponent, DeactivateOkpbEvent>(OnDeactivateDoAfter);
         SubscribeLocalEvent<DeployableOkpbComponent, ContainerIsRemovingAttemptEvent>(OnCellRemovingAttempt);
         SubscribeLocalEvent<DeployableOkpbComponent, InteractUsingEvent>(OnInteractUsing);
+    }
+
+    /// Time it takes to directly turn off
+    private const float DeactivateDelay = 2f;
+
+    private void OnActivateInWorld(Entity<DeployableOkpbComponent> ent, ref ActivateInWorldEvent args)
+    {
+        if (args.Handled || !CanTurnOff((ent.Owner, ent.Comp)))
+            return;
+
+        args.Handled = true;
+        TryStartDeactivate((ent.Owner, ent.Comp), args.User);
+    }
+
+    private void OnGetActivationVerbs(Entity<DeployableOkpbComponent> ent, ref GetVerbsEvent<ActivationVerb> args)
+    {
+        if (!args.CanAccess || !args.CanInteract || !CanTurnOff((ent.Owner, ent.Comp), quiet: true))
+            return;
+
+        var user = args.User;
+        var deactivateText = Loc.GetString("item-toggle-deactivate");
+        foreach (var verb in args.Verbs)
+        {
+            if (verb.Text != deactivateText)
+                continue;
+
+            verb.Act = () => TryStartDeactivate((ent.Owner, ent.Comp), user);
+        }
+    }
+
+    private void OnDeactivateDoAfter(Entity<DeployableOkpbComponent> ent, ref DeactivateOkpbEvent args)
+    {
+        if (args.Cancelled || args.Handled)
+            return;
+
+        if (TryTurnOff((ent.Owner, ent.Comp), args.User))
+            args.Handled = true;
+    }
+
+    public bool TryStartDeactivate(Entity<DeployableOkpbComponent?> ent, EntityUid user)
+    {
+        if (!Resolve(ent, ref ent.Comp))
+            return false;
+
+        if (!CanTurnOff(ent))
+            return false;
+
+        var doAfterArgs = new DoAfterArgs(EntityManager, user, DeactivateDelay,
+            new DeactivateOkpbEvent(), ent.Owner, target: ent.Owner)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            NeedHand = true,
+            DistanceThreshold = SharedInteractionSystem.InteractionRange,
+        };
+
+        return _doAfter.TryStartDoAfter(doAfterArgs);
+    }
+
+    public bool TryTurnOff(Entity<DeployableOkpbComponent?> ent, EntityUid user)
+    {
+        if (!Resolve(ent, ref ent.Comp))
+            return false;
+
+        if (!CanTurnOff(ent, quiet: true))
+            return false;
+
+        return _toggle.TryDeactivate(ent.Owner, user, predicted: false);
+    }
+
+    public bool CanTurnOff(Entity<DeployableOkpbComponent?> ent, bool quiet = false)
+    {
+        if (!Resolve(ent, ref ent.Comp, false))
+            return false;
+
+        return _toggle.IsActivated(ent.Owner);
     }
 
     private void OnInteractUsing(Entity<DeployableOkpbComponent> ent, ref InteractUsingEvent args)
@@ -41,7 +122,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
     }
 
 
-    /// Cells need to be removed (DoAfter) before swapping to prevent cheese
+    /// Cells can't be hotswapped
     public bool TryBlockCellSwap(Entity<DeployableOkpbComponent?> ent, EntityUid used, EntityUid user)
     {
         if (!CanBlockCellSwap(ent, used))
@@ -98,7 +179,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         {
             Text = Loc.GetString("deployable-okpb-remove-cell-verb"),
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/eject.svg.192dpi.png")),
-            Act = () => TryStartRemoveCell((ent.Owner, ent.Comp), user),
+            Act = () => TryRemoveCell((ent.Owner, ent.Comp), user),
             Priority = 1,
         });
     }
@@ -127,38 +208,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         return true;
     }
 
-    /// Ejection DoAfter
-    public bool TryStartRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user)
-    {
-        if (!Resolve(ent, ref ent.Comp))
-            return false;
-
-        if (!CanRemoveCell(ent, user))
-            return false;
-
-        var args = new DoAfterArgs(EntityManager, user, ent.Comp.CellRemovalDelay,
-            new RemoveDeployableOkpbCellEvent(), ent.Owner, target: ent.Owner)
-        {
-            BreakOnMove = true,
-            BreakOnDamage = true,
-            NeedHand = true,
-            DistanceThreshold = SharedInteractionSystem.InteractionRange,
-        };
-
-        return _doAfter.TryStartDoAfter(args);
-    }
-
-    private void OnRemoveCellDoAfter(Entity<DeployableOkpbComponent> ent, ref RemoveDeployableOkpbCellEvent args)
-    {
-        if (args.Cancelled || args.Handled)
-            return;
-
-        if (TryRemoveCell((ent.Owner, ent.Comp), args.User))
-            args.Handled = true;
-    }
-
-
-    /// Grabby Grabby - puts cell into hands after
+    /// Puts the cell into hands. Deployed can't have cells removed
     public bool TryRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user)
     {
         if (!Resolve(ent, ref ent.Comp))

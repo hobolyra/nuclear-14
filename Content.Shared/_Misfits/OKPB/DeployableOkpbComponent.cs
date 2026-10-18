@@ -16,16 +16,12 @@ public sealed partial class DeployableOkpbComponent : Component
     public string FixtureId = "fix1";
 
 
-    /// How long it takes to remove the power cell
-    [DataField]
-    public float CellRemovalDelay = 2f;
-
-    /// Needed to stop canceling doafters because fuck me
+    /// Lets the remove-cell verb pass the container block. Everything else stays cancelled.
     [ViewVariables]
     public bool AllowNextCellEject;
 }
 
 
-/// DoAfter event for cell removal, where the hell do I put this? I don't want to create a new comp file
+/// DoAfter for turning the barrier off by hand.
 [Serializable, NetSerializable]
-public sealed partial class RemoveDeployableOkpbCellEvent : SimpleDoAfterEvent;
+public sealed partial class DeactivateOkpbEvent : SimpleDoAfterEvent;

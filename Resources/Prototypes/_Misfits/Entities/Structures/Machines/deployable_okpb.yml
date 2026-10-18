@@ -5,7 +5,6 @@
   description: an Organic Kinetic Photon Barrier projector
   components:
   - type: Transform
-    noRot: false
     anchored: false
   - type: Physics
     bodyType: Dynamic
@@ -41,7 +40,6 @@
   - type: DeployableOkpb
   - type: ItemToggle
     onUse: false
-    onActivate: true
     predictable: false
     soundActivate:
       path: /Audio/_Misfits/Effects/okpb_deploy.ogg
@@ -50,7 +48,6 @@
     - type: Reflect
       reflectProb: 0.4
       innate: true
-      spread: 45
       reflects:
       - NonEnergy
       - Energy
@@ -75,15 +72,11 @@
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
-        ejectOnInteract: false
         disableEject: true
         whitelist:
           components:
           - PowerCell
   - type: DoAfter
-  - type: Damageable
-    damageContainer: Inorganic
-    damageModifierSet: Metallic
   - type: Destructible
     thresholds:
     - trigger:
@@ -102,7 +95,3 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalBreak
-  - type: Anchorable
-    delay: 2
-  - type: InteractionOutline
-  - type: Clickable
