@@ -1,3 +1,4 @@
+using System.Numerics;
 using Content.Shared.Climbing.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Item.ItemToggle;
@@ -7,6 +8,7 @@ using Content.Shared.Popups;
 using Content.Shared.PowerCell;
 using Content.Shared.PowerCell.Components;
 using Content.Shared.Toggleable;
+using Robust.Shared.Physics.Collision.Shapes;
 using Robust.Shared.Physics.Systems;
 
 namespace Content.Shared._Misfits.OKPB;
@@ -14,19 +16,30 @@ namespace Content.Shared._Misfits.OKPB;
 /// <summary>
 /// Handles collision changes, vaulting, and activation of the Deployable-OKPB
 /// </summary>
+
+
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 {
+    [Dependency] private ItemToggleSystem _toggle = default!;
+    [Dependency] private ItemSlotsSystem _slots = default!;
+    [Dependency] private FixtureSystem _fixtures = default!;
+    [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] protected SharedPopupSystem Popup = default!;
+
     private const CollisionGroup RetractedLayer = CollisionGroup.HalfWallLayer;
     private const CollisionGroup RetractedMask = CollisionGroup.HalfWallLayer;
     private const CollisionGroup DeployedLayer = CollisionGroup.FullTileLayer;
     private const CollisionGroup DeployedMask = CollisionGroup.FullTileMask;
 
-    [Dependency] private FixtureSystem _fixtures = default!;
-    [Dependency] private ItemSlotsSystem _slots = default!;
-    [Dependency] private ItemToggleSystem _toggle = default!;
-    [Dependency] private SharedAppearanceSystem _appearance = default!;
-    [Dependency] private SharedPhysicsSystem _physics = default!;
-    [Dependency] protected SharedPopupSystem Popup = default!;
+    /// Full-tile wall box. Retracted bounds stay whatever the prototype fixture already has.
+    private static readonly Vector2[] DeployedBounds =
+    [
+        new(-0.5f, -0.5f),
+        new(0.5f, -0.5f),
+        new(0.5f, 0.5f),
+        new(-0.5f, 0.5f),
+    ];
 
     public override void Initialize()
     {
@@ -148,8 +161,17 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
         var comp = ent.Comp;
 
         var fixture = _fixtures.GetFixtureOrNull(uid, comp.FixtureId);
-        if (fixture != null)
+        if (fixture?.Shape is PolygonShape poly)
         {
+            if (comp.RetractedBounds == null)
+            {
+                comp.RetractedBounds = poly.Vertices.ToArray();
+                Dirty(uid, comp);
+            }
+
+            var bounds = deployed ? DeployedBounds : comp.RetractedBounds;
+            _physics.SetVertices(uid, comp.FixtureId, fixture, poly, bounds);
+
             var layer = deployed ? DeployedLayer : RetractedLayer;
             var mask = deployed ? DeployedMask : RetractedMask;
             _physics.SetCollisionLayer(uid, comp.FixtureId, fixture, (int)layer);
