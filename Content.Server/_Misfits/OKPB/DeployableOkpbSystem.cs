@@ -65,11 +65,9 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         return true;
     }
 
+    /// Power cell checks
     protected override bool HasDeployCharge(Entity<DeployableOkpbComponent?> ent, EntityUid? user, bool quiet)
     {
-        if (!Resolve(ent, ref ent.Comp, false))
-            return false;
-
         if (!_powerCell.TryGetBatteryFromSlot(ent.Owner, out var battery))
         {
             if (!quiet && user != null)

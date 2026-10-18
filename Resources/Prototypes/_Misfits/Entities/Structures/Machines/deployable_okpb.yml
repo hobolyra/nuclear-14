@@ -9,6 +9,7 @@
     anchored: false
   - type: Physics
     bodyType: Dynamic
+  - type: Rotatable
   - type: Sprite
     noRot: false
     sprite: _Misfits/Objects/Misc/okpb.rsi
@@ -30,13 +31,12 @@
       fix1:
         shape:
           !type:PhysShapeAabb
-          bounds: "-0.45,-0.45,0.45,0.45"
+          bounds: "-0.10,-0.5,0.10,0.5"
         density: 190
         mask:
         - HalfWallLayer
         layer:
         - HalfWallLayer
-        - BulletImpassable
   - type: Climbable
   - type: DeployableOkpb
   - type: ItemToggle

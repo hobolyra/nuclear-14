@@ -7,8 +7,6 @@ using Content.Shared.Popups;
 using Content.Shared.PowerCell;
 using Content.Shared.PowerCell.Components;
 using Content.Shared.Toggleable;
-using Robust.Shared.Physics;
-using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 
 namespace Content.Shared._Misfits.OKPB;
@@ -18,7 +16,7 @@ namespace Content.Shared._Misfits.OKPB;
 /// </summary>
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 {
-    private const CollisionGroup RetractedLayer = CollisionGroup.HalfWallLayer | CollisionGroup.BulletImpassable;
+    private const CollisionGroup RetractedLayer = CollisionGroup.HalfWallLayer;
     private const CollisionGroup RetractedMask = CollisionGroup.HalfWallLayer;
     private const CollisionGroup DeployedLayer = CollisionGroup.FullTileLayer;
     private const CollisionGroup DeployedMask = CollisionGroup.FullTileMask;
@@ -45,7 +43,6 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     private void OnMapInit(Entity<DeployableOkpbComponent> ent, ref MapInitEvent args)
     {
         ApplyDeployedState(ent, _toggle.IsActivated(ent.Owner));
-        UpdatePullPhysics(ent);
     }
 
     private void OnActivateAttempt(Entity<DeployableOkpbComponent> ent, ref ItemToggleActivateAttemptEvent args)
@@ -61,22 +58,11 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 
     private void OnAnchorChanged(Entity<DeployableOkpbComponent> ent, ref AnchorStateChangedEvent args)
     {
-        UpdatePullPhysics(ent);
-
         if (args.Anchored)
             return;
 
         if (_toggle.IsActivated(ent.Owner))
             _toggle.TryDeactivate(ent.Owner);
-    }
-
-    private void UpdatePullPhysics(EntityUid uid)
-    {
-        if (!TryComp(uid, out PhysicsComponent? physics))
-            return;
-
-        var anchored = Transform(uid).Anchored;
-        _physics.SetBodyType(uid, anchored ? BodyType.Static : BodyType.Dynamic, body: physics);
     }
 
     private void OnPowerCellChanged(Entity<DeployableOkpbComponent> ent, ref PowerCellChangedEvent args)
@@ -94,9 +80,8 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
             _toggle.TryDeactivate(ent.Owner);
     }
 
-    /// <summary>
-    /// Public API: attempt to set deployed state. Turning on requires <see cref="CanDeployOkpb"/>.
-    /// </summary>
+
+    /// See if it can be deployed
     public bool TrySetDeployed(Entity<DeployableOkpbComponent?> ent, bool deployed)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -109,9 +94,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
         return true;
     }
 
-    /// <summary>
-    /// Pure check: anchored and a charged power cell is present.
-    /// </summary>
+    
     public bool CanDeployOkpb(Entity<DeployableOkpbComponent?> ent, EntityUid? user = null, bool quiet = false)
     {
         if (!Resolve(ent, ref ent.Comp, false))
@@ -130,21 +113,21 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
         return true;
     }
 
-    /// <summary>
-    /// Overridden on the server to require a slotted cell with remaining charge.
-    /// </summary>
+
+    /// Checks that a power cell is slotted. The server override checks for charge
     protected virtual bool HasDeployCharge(Entity<DeployableOkpbComponent?> ent, EntityUid? user, bool quiet)
     {
-        if (!Resolve(ent, ref ent.Comp, false))
+        if (!TryComp<PowerCellSlotComponent>(ent.Owner, out var slot)
+            || !_slots.TryGetSlot(ent.Owner, slot.CellSlotId, out var itemSlot)
+            || itemSlot.Item is not { } cell
+            || !HasComp<PowerCellComponent>(cell))
+        {
+            if (!quiet && user != null)
+                Popup.PopupEntity(Loc.GetString("deployable-okpb-no-cell"), ent, user.Value);
             return false;
+        }
 
-        if (TryGetCellSlotId(ent.Owner, out var slotId) && _slots.GetItemOrNull(ent.Owner, slotId) != null)
-            return true;
-
-        if (!quiet && user != null)
-            Popup.PopupEntity(Loc.GetString("deployable-okpb-no-cell"), ent, user.Value);
-
-        return false;
+        return true;
     }
 
     protected bool TryGetCellSlotId(EntityUid uid, out string slotId)
@@ -180,7 +163,6 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 
         _appearance.SetData(uid, ToggleVisuals.Toggled, deployed);
 
-        // Lock cell while deployed so it cannot be swapped mid-barrier.
         if (TryGetCellSlotId(uid, out var slotId) && _slots.TryGetSlot(uid, slotId, out var slot))
             _slots.SetLock(uid, slot, deployed);
     }
