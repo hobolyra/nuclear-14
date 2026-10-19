@@ -6,9 +6,11 @@
   components:
   - type: Transform
     anchored: false
+    noRot: false
   - type: Physics
     bodyType: Dynamic
   - type: Rotatable
+    rotateWhileAnchored: true
   - type: Sprite
     noRot: false
     sprite: _Misfits/Objects/Misc/okpb.rsi
@@ -30,7 +32,7 @@
       fix1:
         shape:
           !type:PhysShapeAabb
-          bounds: "-0.10,-0.5,0.10,0.5"
+          bounds: "-0.5,-0.10,0.5,0.10"
         density: 190
         mask:
         - HalfWallLayer

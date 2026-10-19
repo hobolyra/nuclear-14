@@ -4,6 +4,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DoAfter;
 using Content.Shared.Interaction;
 using Content.Shared.Item.ItemToggle;
+using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.PowerCell;
 using Content.Shared.Verbs;
 using Robust.Shared.Containers;
@@ -27,10 +28,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         base.Initialize();
 
         SubscribeLocalEvent<DeployableOkpbComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
-        SubscribeLocalEvent<DeployableOkpbComponent, GetVerbsEvent<ActivationVerb>>(OnGetActivationVerbs,
-            after: [typeof(ItemToggleSystem)]);
-        SubscribeLocalEvent<DeployableOkpbComponent, ActivateInWorldEvent>(OnActivateInWorld,
-            before: [typeof(ItemToggleSystem)]);
+        SubscribeLocalEvent<DeployableOkpbComponent, ItemToggleDeactivateAttemptEvent>(OnDeactivateAttempt);
         SubscribeLocalEvent<DeployableOkpbComponent, DeactivateOkpbEvent>(OnDeactivateDoAfter);
         SubscribeLocalEvent<DeployableOkpbComponent, ContainerIsRemovingAttemptEvent>(OnCellRemovingAttempt);
         SubscribeLocalEvent<DeployableOkpbComponent, InteractUsingEvent>(OnInteractUsing);
@@ -39,29 +37,13 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
     /// Time it takes to directly turn off
     private const float DeactivateDelay = 2f;
 
-    private void OnActivateInWorld(Entity<DeployableOkpbComponent> ent, ref ActivateInWorldEvent args)
+    private void OnDeactivateAttempt(Entity<DeployableOkpbComponent> ent, ref ItemToggleDeactivateAttemptEvent args)
     {
-        if (args.Handled || !CanTurnOff((ent.Owner, ent.Comp)))
+        if (args.User is not { } user)
             return;
 
-        args.Handled = true;
-        TryStartDeactivate((ent.Owner, ent.Comp), args.User);
-    }
-
-    private void OnGetActivationVerbs(Entity<DeployableOkpbComponent> ent, ref GetVerbsEvent<ActivationVerb> args)
-    {
-        if (!args.CanAccess || !args.CanInteract || !CanTurnOff((ent.Owner, ent.Comp), quiet: true))
-            return;
-
-        var user = args.User;
-        var deactivateText = Loc.GetString("item-toggle-deactivate");
-        foreach (var verb in args.Verbs)
-        {
-            if (verb.Text != deactivateText)
-                continue;
-
-            verb.Act = () => TryStartDeactivate((ent.Owner, ent.Comp), user);
-        }
+        if (TryStartDeactivate((ent.Owner, ent.Comp), user))
+            args.Cancelled = true;
     }
 
     private void OnDeactivateDoAfter(Entity<DeployableOkpbComponent> ent, ref DeactivateOkpbEvent args)
@@ -76,6 +58,9 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
     public bool TryStartDeactivate(Entity<DeployableOkpbComponent?> ent, EntityUid user)
     {
         if (!Resolve(ent, ref ent.Comp))
+            return false;
+
+        if (ent.Comp.AllowImmediateDeactivate)
             return false;
 
         if (!CanTurnOff(ent))
@@ -101,7 +86,10 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         if (!CanTurnOff(ent, quiet: true))
             return false;
 
-        return _toggle.TryDeactivate(ent.Owner, user, predicted: false);
+        ent.Comp.AllowImmediateDeactivate = true;
+        var deactivated = _toggle.TryDeactivate(ent.Owner, user, predicted: false);
+        ent.Comp.AllowImmediateDeactivate = false;
+        return deactivated;
     }
 
     public bool CanTurnOff(Entity<DeployableOkpbComponent?> ent, bool quiet = false)

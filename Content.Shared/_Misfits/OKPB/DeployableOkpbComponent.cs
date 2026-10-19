@@ -21,9 +21,13 @@ public sealed partial class DeployableOkpbComponent : Component
     public Vector2[]? RetractedBounds;
 
 
-    /// Lets the remove-cell verb pass the container block. Everything else stays cancelled.
+    /// Needed to let verbs pass the container blocking
     [ViewVariables]
     public bool AllowNextCellEject;
+
+    /// Set after retracting to prevent a second delay later
+    [ViewVariables]
+    public bool AllowImmediateDeactivate;
 }
 
 

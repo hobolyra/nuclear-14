@@ -80,8 +80,6 @@ public sealed partial class PowerDamAbsorptionSystem : EntitySystem
             return false;
 
         if (!_powerCell.TryGetBatteryFromSlot(ent.Owner, out var cellEnt, out var cellBattery)
-            || cellEnt == null
-            || cellBattery == null
             || cellBattery.CurrentCharge <= 0)
             return false;
 

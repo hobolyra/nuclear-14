@@ -13,9 +13,9 @@ using Robust.Shared.Physics.Systems;
 
 namespace Content.Shared._Misfits.OKPB;
 
-/// <summary>
-/// Handles collision changes, vaulting, and activation of the Deployable-OKPB
-/// </summary>
+// <summary>
+// Handles collision changes, vaulting, and activation of the Deployable-OKPB
+// </summary>
 
 
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
@@ -32,7 +32,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     private const CollisionGroup DeployedLayer = CollisionGroup.FullTileLayer;
     private const CollisionGroup DeployedMask = CollisionGroup.FullTileMask;
 
-    /// Full-tile wall box. Retracted bounds stay whatever the prototype fixture already has.
+    // Full-tile wall box. Retracted bounds stay whatever the prototype fixture already has.
     private static readonly Vector2[] DeployedBounds =
     [
         new(-0.5f, -0.5f),
@@ -94,7 +94,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     }
 
 
-    /// See if it can be deployed
+    // See if it can be deployed
     public bool TrySetDeployed(Entity<DeployableOkpbComponent?> ent, bool deployed)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -127,7 +127,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     }
 
 
-    /// Checks that a power cell is slotted. server side checks for charge
+// Checks that a power cell is slotted 
     protected virtual bool HasDeployCharge(Entity<DeployableOkpbComponent?> ent, EntityUid? user, bool quiet)
     {
         if (!TryComp<PowerCellSlotComponent>(ent.Owner, out var slot)
