@@ -1,0 +1,54 @@
+# Board and biomass build the open frame. Screwing the panel shut finishes the OKPB.
+- type: constructionGraph
+  id: DeployableOKPB
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: frame
+      steps:
+      - entity: DeployableOKPBMachineCircuitboard
+        store: machine_board
+        name: OKPB machine board
+        icon:
+          sprite: Objects/Misc/module.rsi
+          state: science
+        doAfter: 1
+      - material: Biomass
+        amount: 20
+        doAfter: 2
+
+  - node: frame
+    entity: DeployableOKPBFrame
+    edges:
+    - to: okpb
+      conditions:
+      - !type:EntityAnchored {}
+      - !type:ContainerNotEmpty
+        container: machine_board
+        examineText: deployable-okpb-frame-needs-board
+      steps:
+      - tool: Screwing
+        doAfter: 2
+    - to: start
+      completed:
+      - !type:SpawnPrototype
+        prototype: MaterialBiomass1
+        amount: 20
+      - !type:EmptyAllContainers
+        pickup: true
+        emptyAtUser: true
+      - !type:DeleteEntity {}
+      steps:
+      - tool: Prying
+        doAfter: 2
+
+  - node: okpb
+    entity: DeployableOKPB
+    edges:
+    - to: frame
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - tool: Prying
+        doAfter: 2

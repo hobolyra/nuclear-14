@@ -67,6 +67,13 @@
   - type: ContainerContainer
     containers:
       cell_slot: !type:ContainerSlot
+      machine_board: !type:Container
+  - type: Construction
+    graph: DeployableOKPB
+    node: okpb
+    containers:
+    - machine_board
+    - cell_slot
   - type: PowerCellSlot
     cellSlotId: cell_slot
     fitsInCharger: false
@@ -97,3 +104,41 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MetalBreak
+
+
+- type: entity
+  parent: BaseMachine
+  id: DeployableOKPBFrame
+  name: OKPB machine frame
+  description: An unfinished barrier projector. The panel is open.
+  components:
+  - type: Transform
+    noRot: false
+  - type: Rotatable
+    rotateWhileAnchored: true
+  - type: Sprite
+    sprite: _Misfits/Objects/Misc/okpb.rsi
+    state: open
+  - type: Construction
+    graph: DeployableOKPB
+    node: frame
+    defaultTarget: okpb
+    containers:
+    - machine_board
+  - type: ContainerContainer
+    containers:
+      machine_board: !type:Container
+
+- type: entity
+  parent: BaseMachine
+  id: StaticOKPBFrame
+  name: experimental projectionframe
+  description: an open machine frame for some unknown project
+  components:
+  - type: Transform
+    noRot: false
+  - type: Rotatable
+    rotateWhileAnchored: true
+  - type: Sprite
+    sprite: _Misfits/Objects/Misc/okpb.rsi
+    state: open

@@ -1,0 +1,12 @@
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: DeployableOKPBMachineCircuitboard
+  name: OKPB machine board
+  description: A machine printed circuit board for a deployable OKPB.
+  components:
+  - type: Sprite
+    state: science
+  - type: MachineBoard
+    prototype: DeployableOKPB
+    materialRequirements:
+      Biomass: 20

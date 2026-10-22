@@ -1,0 +1,15 @@
+- type: construction
+  name: OKPB machine frame
+  id: DeployableOKPB
+  graph: DeployableOKPB
+  startNode: start
+  targetNode: okpb
+  category: construction-category-machines
+  description: An open OKPB frame. Insert an OKPB machine board, twenty biomass, then screw the panel shut.
+  icon:
+    sprite: _Misfits/Objects/Misc/okpb.rsi
+    state: open
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+  - !type:TileNotBlocked
