@@ -1,5 +1,4 @@
 using System.Numerics;
-using Content.Shared.Climbing.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
@@ -13,11 +12,6 @@ using Robust.Shared.Physics.Systems;
 
 namespace Content.Shared._Misfits.OKPB;
 
-// <summary>
-// Handles collision changes, vaulting, and activation of the Deployable-OKPB
-// </summary>
-
-
 public abstract partial class SharedDeployableOkpbSystem : EntitySystem
 {
     [Dependency] private ItemToggleSystem _toggle = default!;
@@ -27,12 +21,14 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] protected SharedPopupSystem Popup = default!;
 
-    private const CollisionGroup RetractedLayer = CollisionGroup.HalfWallLayer;
-    private const CollisionGroup RetractedMask = CollisionGroup.HalfWallLayer;
+    private const CollisionGroup RetractedLayer = CollisionGroup.None;
+    private const CollisionGroup RetractedMask = CollisionGroup.None;
     private const CollisionGroup DeployedLayer = CollisionGroup.FullTileLayer;
     private const CollisionGroup DeployedMask = CollisionGroup.FullTileMask;
 
-    // Full-tile wall box. Retracted bounds stay whatever the prototype fixture already has.
+    // Full-tile wall box. Retracted bounds stay whatever the prototype fixture already had
+    // Was having issues keeping the rotated fixture while still making it full tile on deploy. Probably a messy fix.
+    // Base originally wasn't walk through, wew
     private static readonly Vector2[] DeployedBounds =
     [
         new(-0.5f, -0.5f),
@@ -94,7 +90,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     }
 
 
-    // See if it can be deployed
+    // Deployment checks choo choo
     public bool TrySetDeployed(Entity<DeployableOkpbComponent?> ent, bool deployed)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -127,7 +123,7 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
     }
 
 
-// Checks that a power cell is slotted 
+// Charged powercell checks
     protected virtual bool HasDeployCharge(Entity<DeployableOkpbComponent?> ent, EntityUid? user, bool quiet)
     {
         if (!TryComp<PowerCellSlotComponent>(ent.Owner, out var slot)
@@ -176,12 +172,8 @@ public abstract partial class SharedDeployableOkpbSystem : EntitySystem
             var mask = deployed ? DeployedMask : RetractedMask;
             _physics.SetCollisionLayer(uid, comp.FixtureId, fixture, (int)layer);
             _physics.SetCollisionMask(uid, comp.FixtureId, fixture, (int)mask);
+            _physics.SetHard(uid, fixture, deployed);
         }
-
-        if (deployed)
-            RemCompDeferred<ClimbableComponent>(uid);
-        else
-            EnsureComp<ClimbableComponent>(uid);
 
         _appearance.SetData(uid, ToggleVisuals.Toggled, deployed);
 

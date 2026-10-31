@@ -11,7 +11,6 @@ namespace Content.Shared._Misfits.OKPB;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class DeployableOkpbComponent : Component
 {
-
     /// ID of the fixture that gets swapped on deploy
     [DataField]
     public string FixtureId = "fix1";
@@ -20,17 +19,16 @@ public sealed partial class DeployableOkpbComponent : Component
     [DataField, AutoNetworkedField]
     public Vector2[]? RetractedBounds;
 
-
-    /// Needed to let verbs pass the container blocking
+    /// Bypass container blocking
     [ViewVariables]
     public bool AllowNextCellEject;
 
-    /// Set after retracting to prevent a second delay later
+    /// Set after retract, needed to prevent second delay
     [ViewVariables]
     public bool AllowImmediateDeactivate;
 }
 
 
-/// DoAfter for turning the barrier off by hand.
+/// DoAfter for turning the barrier off
 [Serializable, NetSerializable]
 public sealed partial class DeactivateOkpbEvent : SimpleDoAfterEvent;

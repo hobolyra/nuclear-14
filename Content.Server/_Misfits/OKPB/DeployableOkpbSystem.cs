@@ -12,9 +12,6 @@ using Robust.Shared.Utility;
 
 namespace Content.Server._Misfits.OKPB;
 
-/// <summary>
-/// Deployable OKPB - cell checks, and removal actions
-/// </summary>
 public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
 {
 
@@ -34,7 +31,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         SubscribeLocalEvent<DeployableOkpbComponent, InteractUsingEvent>(OnInteractUsing);
     }
 
-    /// Time it takes to directly turn off
+    /// Adding a turn off delay so players can't just walk up and flick it off
     private const float DeactivateDelay = 2f;
 
     private void OnDeactivateAttempt(Entity<DeployableOkpbComponent> ent, ref ItemToggleDeactivateAttemptEvent args)
@@ -110,7 +107,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
     }
 
 
-    /// Cells can't be hotswapped
+    /// Cells can't be hotswapped, again to avoid cheese
     public bool TryBlockCellSwap(Entity<DeployableOkpbComponent?> ent, EntityUid used, EntityUid user)
     {
         if (!CanBlockCellSwap(ent, used))
@@ -196,7 +193,7 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
         return true;
     }
 
-    /// Puts the cell into hands. Deployed can't have cells removed
+    /// removal handling. Why do I feel like this is wrong...
     public bool TryRemoveCell(Entity<DeployableOkpbComponent?> ent, EntityUid user)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -214,7 +211,6 @@ public sealed partial class DeployableOkpbSystem : SharedDeployableOkpbSystem
 
         return ejected && _slots.GetItemOrNull(ent.Owner, slotId) == null;
     }
-
 
 
     private void OnCellRemovingAttempt(Entity<DeployableOkpbComponent> ent, ref ContainerIsRemovingAttemptEvent args)

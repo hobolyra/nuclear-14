@@ -34,11 +34,7 @@
           !type:PhysShapeAabb
           bounds: "-0.5,-0.10,0.5,0.10"
         density: 190
-        mask:
-        - HalfWallLayer
-        layer:
-        - HalfWallLayer
-  - type: Climbable
+        hard: false
   - type: DeployableOkpb
   - type: ItemToggle
     onUse: false
@@ -71,9 +67,11 @@
   - type: Construction
     graph: DeployableOKPB
     node: okpb
+    deconstructionTarget: glass
     containers:
     - machine_board
     - cell_slot
+
   - type: PowerCellSlot
     cellSlotId: cell_slot
     fitsInCharger: false
@@ -121,13 +119,14 @@
     state: open
   - type: Construction
     graph: DeployableOKPB
-    node: frame
+    node: frameUnsecured
     defaultTarget: okpb
     containers:
     - machine_board
   - type: ContainerContainer
     containers:
       machine_board: !type:Container
+
 
 - type: entity
   parent: BaseMachine

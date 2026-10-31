@@ -10,3 +10,6 @@
     prototype: DeployableOKPB
     materialRequirements:
       Biomass: 20
+      Steel: 2
+      Glass: 10
+

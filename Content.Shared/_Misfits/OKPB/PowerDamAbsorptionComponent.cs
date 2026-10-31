@@ -9,7 +9,7 @@ namespace Content.Shared._Misfits.OKPB;
 public sealed partial class PowerDamAbsorptionComponent : Component
 {
 
-    /// Fraction of damage converted to power cell charge drain
+    /// Fraction of damage converted to power cell drain
     [DataField]
     public float Absorption = 0.6f;
 }

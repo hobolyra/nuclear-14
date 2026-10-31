@@ -9,7 +9,7 @@ using Content.Shared.PowerCell;
 namespace Content.Server._Misfits.OKPB;
 
 /// <summary>
-/// Uses power cell charge to absorb damage instead of entity health
+/// Uses power cell charge to absorb damage instead of entity health. Moves to base ent health once power cell gets used up
 /// </summary>
 public sealed partial class PowerDamAbsorptionSystem : EntitySystem
 {
@@ -30,7 +30,7 @@ public sealed partial class PowerDamAbsorptionSystem : EntitySystem
     }
 
 
-    /// Try to pull charge from cell to absorb damage
+    /// Try to pull charge from cell to absorb damage, inneficient charge checkaroonie
     public bool TryAbsorbDamage(Entity<PowerDamAbsorptionComponent?> ent, ref DamageModifyEvent args)
     {
         if (!Resolve(ent, ref ent.Comp, false))
@@ -51,7 +51,6 @@ public sealed partial class PowerDamAbsorptionSystem : EntitySystem
         var used = Math.Min(desiredDrain, battery.CurrentCharge);
         _battery.UseCharge(batteryUid, used, battery);
 
-        // account for insufficient charge
         var remainingFraction = 1f - (used / desiredDrain);
         if (remainingFraction <= 0f)
             args.Damage *= 0f;

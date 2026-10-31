@@ -1,11 +1,12 @@
-# Board and biomass build the open frame. Screwing the panel shut finishes the OKPB.
+# Crafting starts with the frame and frame sprites
+# Build OKPB from there. Long ass pry time to reverse to avoid players just do that to turn it off
 - type: constructionGraph
   id: DeployableOKPB
   start: start
   graph:
   - node: start
     edges:
-    - to: frame
+    - to: frameUnsecured
       steps:
       - entity: DeployableOKPBMachineCircuitboard
         store: machine_board
@@ -14,14 +15,17 @@
           sprite: Objects/Misc/module.rsi
           state: science
         doAfter: 1
-      - material: Biomass
+      - material: Steel
         amount: 20
         doAfter: 2
+      - material: Cable
+        amount: 5
+        doAfter: 2
 
-  - node: frame
+  - node: frameUnsecured
     entity: DeployableOKPBFrame
     edges:
-    - to: okpb
+    - to: frame
       conditions:
       - !type:EntityAnchored {}
       - !type:ContainerNotEmpty
@@ -33,8 +37,11 @@
     - to: start
       completed:
       - !type:SpawnPrototype
-        prototype: MaterialBiomass1
+        prototype: SheetSteel1
         amount: 20
+      - !type:SpawnPrototype
+        prototype: CableApcStack1
+        amount: 5
       - !type:EmptyAllContainers
         pickup: true
         emptyAtUser: true
@@ -43,12 +50,102 @@
       - tool: Prying
         doAfter: 2
 
+  - node: frame
+    entity: DeployableOKPBFrame
+    edges:
+    - to: biomass
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - material: Biomass
+        amount: 20
+        doAfter: 2
+    - to: frameUnsecured
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - tool: Screwing
+        doAfter: 2
+
+  - node: biomass
+    entity: DeployableOKPBFrame
+    edges:
+    - to: steel
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - material: Steel
+        amount: 2
+        doAfter: 1
+    - to: frame
+      completed:
+      - !type:SpawnPrototype
+        prototype: MaterialBiomass1
+        amount: 20
+      steps:
+      - tool: Prying
+        doAfter: 2
+
+  - node: steel
+    entity: DeployableOKPBFrame
+    edges:
+    - to: welded
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - tool: Welding
+        doAfter: 3
+    - to: biomass
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetSteel1
+        amount: 2
+      steps:
+      - tool: Prying
+        doAfter: 2
+
+  - node: welded
+    entity: DeployableOKPBFrame
+    edges:
+    - to: glass
+      conditions:
+      - !type:EntityAnchored {}
+      steps:
+      - material: Glass
+        amount: 10
+        doAfter: 2
+    - to: steel
+      steps:
+      - tool: Welding
+        doAfter: 3
+
+  - node: glass
+    entity: DeployableOKPBFrame
+    edges:
+    - to: okpb
+      conditions:
+      - !type:EntityAnchored {}
+      - !type:ContainerNotEmpty
+        container: machine_board
+        examineText: deployable-okpb-frame-needs-board
+      steps:
+      - tool: Screwing
+        doAfter: 2
+    - to: welded
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetGlass1
+        amount: 10
+      steps:
+      - tool: Prying
+        doAfter: 2
+
   - node: okpb
     entity: DeployableOKPB
     edges:
-    - to: frame
+    - to: glass
       conditions:
       - !type:EntityAnchored {}
       steps:
       - tool: Prying
-        doAfter: 2
+        doAfter: 10
