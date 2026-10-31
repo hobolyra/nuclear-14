@@ -12409,3 +12409,295 @@ Entries:
   id: 6518
   time: '2026-10-12T20:13:03.0000000+00:00'
   url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2060
+- author: RedBookcase
+  changes:
+    - type: Add
+      message: >-
+        Gauss Rifle ASRS crate purchase for Enclave. There's only a single
+        one...
+    - type: Tweak
+      message: Lowered Gauss Rifle ROF from 2.0 to 1.2
+    - type: Remove
+      message: Removed BoS Recruitment Popup.
+    - type: Remove
+      message: >-
+        Remove Enclave Gauss Pistol BP and ASRS order, and removed it from
+        random expedition loot as well.
+    - type: Tweak
+      message: 'Renamed Poleaxe to Bardiche :nerd_face: '
+    - type: Tweak
+      message: Removed second Knight Lancer slot.
+    - type: Tweak
+      message: >-
+        Lots of changes to wield delays. Wield delay removed on 5.56 LMGs. Wield
+        delay and movespeed slow lowered for M240b following it's ROF nerf. 
+    - type: Tweak
+      message: >-
+        Increased price of Enclave materials crate to prevent infinite money
+        exploit
+  id: 6519
+  time: '2026-10-13T03:27:54.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2076
+- author: cythisiax
+  changes:
+    - type: Add
+      message: title
+  id: 6520
+  time: '2026-10-13T23:15:27.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2080
+- author: cythisiax
+  changes:
+    - type: Tweak
+      message: Re-enable due to overwhelming support
+  id: 6521
+  time: '2026-10-13T23:55:24.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2082
+- author: Enkidienne
+  changes:
+    - type: Add
+      message: container autostacking
+    - type: Tweak
+      message: Small M7 spear buff (5 ROF, 25 magsize 75 boxes)
+    - type: Tweak
+      message: Currency magnetization
+    - type: Tweak
+      message: Sneak perk affects armor sound to make them quieter
+    - type: Tweak
+      message: Wound tend surgery buff (factor of 2.5x)
+    - type: Tweak
+      message: Wound tend surgery on dead buff (0.2 to 0.5)
+  id: 6522
+  time: '2026-10-15T01:39:03.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2083
+- author: Davisrocket
+  changes:
+    - type: Add
+      message: >-
+        Recipes for Buffout, Wonderglue, Turpentine, Bloatfly Acid, Scorpion
+        Tail, Fire Ant Nectar. Sprites for growing cave fungus, and irradiated
+        fungus. Mutable Cave Fungus. 
+  id: 6523
+  time: '2026-10-15T02:11:48.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2081
+- author: grif16886-hash
+  changes:
+    - type: Remove
+      message: Vault key on robot
+  id: 6524
+  time: '2026-10-15T22:46:42.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2078
+- author: Vixting
+  changes:
+    - type: Tweak
+      message: reduce war pending to 5m
+  id: 6525
+  time: '2026-10-16T12:07:20.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2094
+- author: John-Dang
+  changes:
+    - type: Add
+      message: Added vertibird descriptions.
+    - type: Add
+      message: Added some new wildlife descriptions.
+    - type: Add
+      message: Added some new pet descriptions.
+  id: 6526
+  time: '2026-10-16T12:08:03.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2085
+- author: Enkidienne
+  changes:
+    - type: Add
+      message: >-
+        C-27 Variant; The Integrator, a biomechanical horror capable of
+        processing chemicals.
+    - type: Add
+      message: >-
+        C-27 Variant; The Assault, a reinforced frontline unit, slow but nigh
+        unstoppable.
+    - type: Add
+      message: >-
+        C-27 Variant; The recon, quick, with better sensors and lighter
+        plating. 
+  id: 6527
+  time: '2026-10-17T12:42:57.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2086
+- author: grif16886-hash
+  changes: []
+  id: 6528
+  time: '2026-10-17T13:32:26.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2095
+- author: JohnKieser
+  changes:
+    - type: Tweak
+      message: >-
+        Oversight with RNG caused expeditions to probably use the same seed for
+        loot.
+    - type: Tweak
+      message: Corrected cache room spawn weights. Adjusted weights in general
+  id: 6529
+  time: '2026-10-19T05:55:47.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2098
+- author: Davisrocket
+  changes:
+    - type: Add
+      message: >-
+        Ammo Crates, Detonable Crates, Recreation Crates, Provision Crates,
+        Equipment Crates, Medical Crates
+    - type: Add
+      message: >-
+        Armor Crates balance, and armor balance for Enclave (no longer all the
+        same)
+    - type: Tweak
+      message: Massive Price Overhaul to Enclave gear, stocks, and cost adjustments
+    - type: Tweak
+      message: >-
+        Yaml locations, marks for Enclave clothing and naming to be more
+        standardized
+    - type: Tweak
+      message: ASRS Gold, Silver, Plant Sell Amount
+    - type: Tweak
+      message: Enclave BPs no longer necessary
+    - type: Tweak
+      message: >-
+        Planned future armors coded in but inactive, needing sprites (scout,
+        pilot, marine)
+    - type: Fix
+      message: small microfusion cell red to microfusion cell adjustments
+    - type: Fix
+      message: >-
+        remove Enclave name from appearing in some locations, changed to U.S.
+        Army
+  id: 6530
+  time: '2026-10-21T03:41:04.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2099
+- author: Tytos
+  changes:
+    - type: Fix
+      message: Fixed infinite money with high charisma cash trading
+  id: 6531
+  time: '2026-10-24T18:12:18.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2105
+- author: hobolyra
+  changes:
+    - type: Remove
+      message: Feline genes no longer spawn
+  id: 6532
+  time: '2026-10-24T18:21:59.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2111
+- author: Billclinton
+  changes:
+    - type: Tweak
+      message: Death to the ROFs, ballistic rifles have lost their low TTK
+    - type: Tweak
+      message: Death to the reflect, 5.56, 5.45, and 7.62 no longer bounce on PA.
+    - type: Tweak
+      message: autoplas lost 0.5 ROF and went to the same accuracy as the other plasma
+    - type: Tweak
+      message: buffed 5.56, 5.45, 7.62, 12.7, and .308 damages by a minor amount.
+    - type: Tweak
+      message: added additional slowdown to machineguns. Most of them sit at 25% now.
+  id: 6533
+  time: '2026-10-24T18:37:56.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2102
+- author: JohnKieser
+  changes:
+    - type: Fix
+      message: >-
+        Description for buffed perks updated to be correct. In case you didnt
+        realize life giver, iron fist, and rad claw were buffed
+  id: 6534
+  time: '2026-10-25T21:30:30.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2117
+- author: Wassuy
+  changes:
+    - type: Tweak
+      message: Feral ghoul reaver now had a bit of armor.
+    - type: Tweak
+      message: Raiders now open doors, don't cheese em!
+    - type: Tweak
+      message: Raiders overall accurcy had been nerfeds
+    - type: Tweak
+      message: Raiders eyesights had been reduced
+    - type: Fix
+      message: Fixed Raiders now have some gloves.
+    - type: Fix
+      message: Fixed Now certain raiders have their gun sprite fixed
+  id: 6535
+  time: '2026-10-28T02:06:41.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/1975
+- author: Clintion
+  changes:
+    - type: Tweak
+      message: >-
+        NCR vendor supply lines have been cut by command. Less good guns, armor,
+        ammo, and equipment will arrive
+    - type: Fix
+      message: Added wielded slowdown increase to bozar
+    - type: Tweak
+      message: increased slowdown on M240b by 10%
+  id: 6536
+  time: '2026-10-29T02:49:30.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2128
+- author: Tytos
+  changes:
+    - type: Tweak
+      message: adjusted circuitry prices and max buyable
+  id: 6537
+  time: '2026-10-29T02:49:36.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2130
+- author: Sirius-Frost
+  changes: []
+  id: 6538
+  time: '2026-10-30T23:50:05.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2124
+- author: Sirius-Frost
+  changes:
+    - type: Add
+      message: >-
+        A 'recruits' crate was added for purchase, allowing recruits to be more
+        quickly outfitted.
+    - type: Remove
+      message: Removed the Enclave's blueprints from their armory.
+    - type: Tweak
+      message: >-
+        Several crates purchased in the ASRS have had their availability
+        updated.
+    - type: Tweak
+      message: 'Crops from botany have been made viable to be sold. '
+    - type: Tweak
+      message: 'Gold and Silver have been slightly buffed. '
+  id: 6539
+  time: '2026-10-30T23:51:20.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2123
+- author: hobolyra
+  changes:
+    - type: Remove
+      message: Deletes exploitable items from outside vault map
+    - type: Tweak
+      message: Multiple QoL changes to vault map
+  id: 6540
+  time: '2026-10-31T01:03:52.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2131
+- author: RedBookcase
+  changes:
+    - type: Add
+      message: >-
+        Part two of the Brotherhood resprite! Includes tons of new jumpsuits,
+        cloaks, coats, hats, etc!
+  id: 6541
+  time: '2026-10-31T01:10:47.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2120
+- author: TytosB
+  changes:
+    - type: Tweak
+      message: slightly reduced time reqs for a few legion jobs
+  id: 6542
+  time: '2026-10-31T01:11:09.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2125
+- author: hobolyra
+  changes:
+    - type: Fix
+      message: Town and Vault warp
+  id: 6543
+  time: '2026-10-31T13:24:58.0000000+00:00'
+  url: https://github.com/Misfit-Sanctuary/nuclear-14/pull/2134

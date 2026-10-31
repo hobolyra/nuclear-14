@@ -273,7 +273,7 @@
   name: Yao Guai
   id: N14MobYaoguai
   parent: N14MobBaseHostile
-  description: Descended from the American black bears, their capacity for destruction is only matched by their massive appetite.
+  description: Descended from the American black bears, their capacity for destruction is only matched by their massive appetite. They want your picnic basket.
   components:
   - type: Damageable
     damageContainer: Biological

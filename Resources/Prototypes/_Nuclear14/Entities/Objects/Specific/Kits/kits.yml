@@ -1086,7 +1086,7 @@
   name: veteran ranger assault kit
   parent: KitBase
   id: KitAssaultRangerVeteran
-  description: A cache containing the belongings of a Veteran Ranger.
+  description: A cache containing the belongings of a Veteran Ranger. # #Misfits Change - Veteran Ranger assault kit now issues the suppressed Operative
   components:
   - type: Sprite
     state: rifleman
@@ -1095,7 +1095,7 @@
   - type: SpawnItemsOnUse
     items:
       - id: ClothingBeltNCR
-      - id: N14WeaponRifle556Carbine
+      - id: N14WeaponRifleOperative
       - id: LongMagazine556Rifle
         amount: 4
       - id: MagazineBox556
@@ -1110,7 +1110,7 @@
   name: veteran ranger marksman kit
   parent: KitBase
   id: KitMarksmanRangerVeteran
-  description: A cache containing the belongings of a Veteran Ranger.
+  description: A cache containing the belongings of a Veteran Ranger. # #Misfits Change - Veteran Ranger marksman kit now issues the 6.8mm M7 Spear
   components:
   - type: Sprite
     state: marksman
@@ -1119,10 +1119,10 @@
   - type: SpawnItemsOnUse
     items:
       - id: ClothingBeltNCR
-      - id: N14WeaponRifle762Marksman
-      - id: Magazine762Rifle
+      - id: N14WeaponRifleM7Spear
+      - id: Magazine68Rifle
         amount: 4
-      - id: MagazineBox762
+      - id: MagazineBox68
       - id: N14Stimpak
       - id: N14Stimpak
       - id: N14BoxCardboardMREBoxKFilled
@@ -1218,7 +1218,8 @@
       - id: N14CleanGauze10
       - id: N14Stimpak
       - id: N14BoxCardboardMREBoxKFilled
-      - id: N14ClothingOuterCombatArmorSeniorBOS
+      - id: MisfitsBoSSeniorKnightArmor
+      - id: N14ClothingHeadHatBrotherhoodHelmetSeniorKnight
       - id: MisfitsGrenadeFragDefensive # #Misfits Add - faction council Senior Knight ordnance
       - id: EmpGrenade
 
@@ -1243,7 +1244,8 @@
       - id: N14CleanGauze10
       - id: N14Stimpak
       - id: N14BoxCardboardMREBoxKFilled
-      - id: N14ClothingOuterCombatArmorSeniorBOS
+      - id: MisfitsBoSSeniorKnightArmor
+      - id: N14ClothingHeadHatBrotherhoodHelmetSeniorKnight
       - id: MisfitsGrenadeFragDefensive # #Misfits Add - faction council Senior Knight ordnance
       - id: EmpGrenade
 
@@ -1359,7 +1361,9 @@
       - id: N14SuperStimpak
       - id: N14ClothingBeltMedicalFilled
       - id: ClothingMaskSterile
-      - id: N14ClothingOuterBrotherhoodMidwestMedicalScribeRobes
+      - id: MisfitsClothingOuterBrotherhoodMagnifier
+      - id: M14ClothingUniformBrotherhoodMedicalScribe
+      - id: MisfitsClothingBeltMedicalScribeBelt
       - id: ClothingHandsGlovesChemist
       - id: N14BoxCardboardMREBoxKFilled
       - id: N14WeaponLaserPistol
@@ -1385,9 +1389,11 @@
       - id: N14Ointment10
       - id: N14MedkitCombatFilled
       - id: N14HandheldHealthAnalyzer
-      - id: N14ClothingHandsGlovesCombat
-      - id: N14ClothingBeltBoSWebbing
-      - id: N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
+      - id: N14ClothingHandsGlovesDriver
+      - id: N14ClothingMaskBrotherhoodHeadCover
+      - id: MisfitsClothingOuterBrotherhoodFieldCoat
+      - id: M14ClothingUniformBrotherhoodFieldScribe
+      - id: MisfitsClothingBeltFieldScribeWebbing
       - id: N14BoxCardboardMREBoxKFilled
       - id: N14WeaponLaserPistol
       - id: N14PowerCellSmall
@@ -1410,9 +1416,13 @@
     items:
       - id: N14CleanGauze10
       - id: N14Ointment10
-      - id: N14ClothingOuterMidwestBoSCoat
+      - id: MisfitsClothingOuterBrotherhoodMagnifier
+      - id: M14ClothingUniformBrotherhoodScienceScribe
+      - id: ClothingHeadBrotherhoodScribeScienceHelmet
+      - id: MisfitsClothingBeltScienceScribeBelt
       - id: N14ClothingEyesGlassesWelding
-      - id: ClothingHandsGlovesColorYellow
+      - id: N14ClothingHandsGlovesCombat
+      - id: N14ClothingMaskBrotherhoodHeadCover
       - id: N14ClothingBeltUtilityFilled
       - id: N14BoxCardboardMREBoxKFilled
       - id: N14WeaponLaserPistol
@@ -1441,7 +1451,9 @@
     - id: N14SuperStimpak
     - id: N14ClothingBeltMedicalFilled
     - id: ClothingMaskSterile
-    - id: N14ClothingOuterBrotherhoodMidwestMedicalScribeRobes
+    - id: MisfitsClothingOuterBrotherhoodMagnifier
+    - id: M14ClothingUniformBrotherhoodMedicalScribe
+    - id: MisfitsClothingBeltMedicalScribeBelt
     - id: ClothingHandsGlovesChemist
     - id: N14BoxCardboardMREBoxKFilled
     - id: N14WeaponLaserRifle
@@ -1467,9 +1479,11 @@
     - id: N14Ointment10
     - id: N14MedkitCombatFilled
     - id: N14HandheldHealthAnalyzer
-    - id: N14ClothingHandsGlovesCombat
-    - id: N14ClothingBeltBoSWebbing
-    - id: N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
+    - id: N14ClothingHandsGlovesDriver
+    - id: N14ClothingMaskBrotherhoodHeadCover
+    - id: MisfitsClothingOuterBrotherhoodFieldCoat
+    - id: M14ClothingUniformBrotherhoodFieldScribe
+    - id: MisfitsClothingBeltFieldScribeWebbing
     - id: N14BoxCardboardMREBoxKFilled
     - id: N14WeaponLaserRifle
     - id: N14MicrofusionCell
@@ -1492,9 +1506,13 @@
     items:
     - id: N14CleanGauze10
     - id: N14Ointment10
-    - id: N14ClothingOuterMidwestBoSCoat
+    - id: MisfitsClothingOuterBrotherhoodMagnifier
+    - id: M14ClothingUniformBrotherhoodScienceScribe
+    - id: ClothingHeadBrotherhoodScribeScienceHelmet
+    - id: MisfitsClothingBeltScienceScribeBelt
     - id: N14ClothingEyesGlassesWelding
-    - id: ClothingHandsGlovesColorYellow
+    - id: N14ClothingHandsGlovesCombat
+    - id: N14ClothingMaskBrotherhoodHeadCover
     - id: N14ClothingBeltUtilityFilled
     - id: N14BoxCardboardMREBoxKFilled
     - id: N14WeaponLaserRifle

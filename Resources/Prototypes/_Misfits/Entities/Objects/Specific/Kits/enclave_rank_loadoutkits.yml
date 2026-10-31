@@ -147,7 +147,7 @@
       - id: N14ClothingOuterEnclaverOfficerCoat
       - id: ClothingBeltMilitary
       - id: N14WeaponLaserRifleWattz3000
-      - id: N14MicrofusionCellRed
+      - id: N14MicrofusionCell
         amount: 2
       - id: N14WeaponLaserPistol
       - id: N14PowerCellSmall
@@ -175,10 +175,10 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterEnclaveArmor
+      - id: N14ClothingOuterEnclaveCombatArmor
       - id: ClothingBeltMilitary
       - id: N14WeaponLaserRifleAER12
-      - id: N14MicrofusionCellRed
+      - id: N14MicrofusionCell
         amount: 2
       - id: N14WeaponLaserPistolRecharger
       - id: RadioHandheld
@@ -233,7 +233,7 @@
       - id: N14ClothingOuterEnclavePeacekeeper
       - id: ClothingBeltMilitary
       - id: N14WeaponLaserRifleWattz2000
-      - id: N14MicrofusionCellRed
+      - id: N14MicrofusionCell
         amount: 2
       - id: N14WeaponLaserPistol
       - id: RadioHandheld
@@ -257,7 +257,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterEnclaveArmor
+      - id: N14ClothingOuterEnclaveCombatArmor
       - id: ClothingBeltMilitary
       - id: N14WeaponPlasmaRifleUrban
       - id: N14PlasmaCartridge
@@ -285,7 +285,7 @@
       - id: N14ClothingOuterEnclavePeacekeeper
       - id: ClothingBeltMilitary
       - id: N14WeaponLaserRifleAER12
-      - id: N14MicrofusionCellRed
+      - id: N14MicrofusionCell
         amount: 2
       - id: N14WeaponLaserPistol
       - id: N14PowerCellSmall

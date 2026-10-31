@@ -198,7 +198,7 @@
   name: radroach
   id: N14MobRadroach
   parent: N14MobBaseHostileInsect
-  description: Nothing can kill the roaches, you can launch as many doomsdays as you like, they'll still crawl out of the rubble.
+  description: Nothing can wipe out roaches, you can launch as many doomsdays as you like, they'll still crawl out of the rubble.
   components:
   - type: Sprite
     drawdepth: Mobs
@@ -402,7 +402,7 @@
   name: cazador
   parent: N14MobBaseHostileInsect
   id: N14MobCazador
-  description: These pests kill anything that moves, and they are fast. There is a bounty for exterminating these, which you can cash in by selling their acid sacs as proof of kill.
+  description: These pests kill anything that moves, and they are fast. There is a bounty for exterminating these, which you can cash in by selling their acid sacs as proof of kill. They seem impossible to wipe out.
   components:
   - type: MovementSpeedModifier
     baseWalkSpeed : 3
